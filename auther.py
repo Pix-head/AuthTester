@@ -2,6 +2,7 @@ from termcolor import colored
 from ftplib import FTP
 import argparse
 import paramiko
+import time
 import sys
 import os
 
@@ -55,10 +56,6 @@ def ftp_check():
 
     print("--------- ---------------")
 
-    if len(addr_success) > 0:
-        for addr in addr_success:
-            print(colored(addr,"green"))
-
 def ssh_check():
     if login and passwd:
         print("--------- ---------------")
@@ -87,6 +84,7 @@ def ssh_check():
                 print("[" + colored("FAILURE", "red") + "] " + ip)
             else:
                 print("[" + colored("SUCCESS", "green") + "] " + ip)
+                addr_success.append(ip)
 
         print("--------- ---------------")
 
@@ -114,10 +112,27 @@ else:
 
 if str(args.mode).lower() == "ssh":
     print("> Mode: SSH")
+    time.sleep(2)
     ssh_check()
 elif str(args.mode).lower() == "ftp":
     print("> Mode: FTP")
+    time.sleep(2)
     ftp_check()
 else:
     print(colored("> Wrong protocol!", "red"))
     sys.exit(0)
+
+if len(addr_success) > 0:
+    for addr in addr_success:
+        print(colored(addr,"green"))
+
+if str(args.mode).lower() == "ftp" and len(addr_success) > 0 and not login and not passwd:
+    print("-------------------------")
+    print("login   : anonymous")
+    print("password: keepme")
+
+elif len(addr_success) > 0 and login and passwd:
+    print("-------------------------")
+    print("login   : " + login)
+    print("password: " + passwd)
+
