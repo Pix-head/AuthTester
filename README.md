@@ -12,3 +12,6 @@
   -p, --password Password</br>
   -f, --fast &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fast mode</br>
   -m, --mode &nbsp;&nbsp;&nbsp;Protocol type (SSH/FTP)</br>
+  
+**GUI version:**<br/>
+https://yadi.sk/d/EjkbDmvR-xJY_A 
