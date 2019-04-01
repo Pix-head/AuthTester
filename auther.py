@@ -1,5 +1,7 @@
 from termcolor import colored
 from ftplib import FTP
+from socket import *
+from struct import *
 import argparse
 import paramiko
 import time
@@ -9,6 +11,8 @@ import os
 
 parser = argparse.ArgumentParser(description="Options for FTPchecker")
 
+parser.add_argument('-g', '--generate', help="Ip range")
+parser.add_argument('-o', '--output', help="Output file name")
 parser.add_argument('-t', '--target', help="Target ip")
 parser.add_argument('-T', '--targets', help="File with targets ip")
 parser.add_argument('-l', '--login', help="Login")
@@ -26,6 +30,21 @@ def check_file(file_path):
         print(colored("> File not found!", "red"))
         sys.exit(0)
 
+def generate(rang, file_name):
+    try:
+        first, second = rang.split("-")
+    except:
+        print(colored("> Wrong input!", "red"))
+    else:
+        with open(file_name, "w") as f:
+            try:
+                for ip in range(unpack('!I', inet_pton(AF_INET, first))[0], unpack('!I', inet_pton(AF_INET, second))[0]):
+                    addr = inet_ntop(AF_INET, pack('!I', ip))
+                    f.write(addr + "\n")
+            except:
+                print(colored("> Illegal IP!", "red"))
+            else:
+                print(colored("\nList was created and saved to " + file_name, "green"))
 
 def ftp_check():
     print("--------- ---------------")
@@ -91,6 +110,16 @@ def ssh_check():
     else:
         print(colored("> Login and password are required!", "red"))
 
+if args.generate and args.output:
+    generate(args.generate, args.output)
+    sys.exit(0)
+elif args.generate and not args.output:
+    print(colored("> Output argument is required!", "red"))
+    sys.exit(0)
+elif not args.generate and args.output:
+    print(colored("> Range is required!", "red"))
+    sys.exit(0)
+
 if args.targets:
     check_file(args.targets)
 
@@ -125,6 +154,8 @@ else:
 if len(addr_success) > 0:
     for addr in addr_success:
         print(colored(addr,"green"))
+else:
+    print("Nothing:(")
 
 if str(args.mode).lower() == "ftp" and len(addr_success) > 0 and not login and not passwd:
     print("-------------------------")
@@ -135,4 +166,6 @@ elif len(addr_success) > 0 and login and passwd:
     print("-------------------------")
     print("login   : " + login)
     print("password: " + passwd)
+
+print()
 
