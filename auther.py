@@ -9,7 +9,7 @@ import sys
 import os
 
 
-parser = argparse.ArgumentParser(description="Options for FTPchecker")
+parser = argparse.ArgumentParser(description="Options for AuthTester")
 
 parser.add_argument('-g', '--generate', help="Ip range")
 parser.add_argument('-o', '--output', help="Output file name")
