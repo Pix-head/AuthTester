@@ -72,6 +72,7 @@ def ftp_check():
             print("[" + colored("FAILURE", "red") + "] " + ip)
         else:
             print("[" + colored("SUCCESS", "green") + "] " + ip)
+            addr_success.append(ip)
 
     print("--------- ---------------")
 
@@ -151,19 +152,18 @@ else:
     print(colored("> Wrong protocol!", "red"))
     sys.exit(0)
 
-if len(addr_success) > 0:
+if len(addr_success) > 1:
     for addr in addr_success:
         print(colored(addr,"green"))
-else:
+    print("-------------------------")
+elif len(addr_success) == 0:
     print("Nothing:(")
 
 if str(args.mode).lower() == "ftp" and len(addr_success) > 0 and not login and not passwd:
-    print("-------------------------")
     print("login   : anonymous")
     print("password: keepme")
 
 elif len(addr_success) > 0 and login and passwd:
-    print("-------------------------")
     print("login   : " + login)
     print("password: " + passwd)
 
